@@ -11,17 +11,27 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpStrenght = 40f;
     [SerializeField] private float loseJumpLevelSpeed = 0.1f;
     [Space]
-    [SerializeField] private Camera playerCamera = null;
+    
     [SerializeField] private float rotateSensitivity = 50f;
     [SerializeField] private int maxY_Rotation = 80;
     [SerializeField] private int minY_Rotation = -80;
     [Space(10)]
     [SerializeField] private bool isDoubleJumpUnlocked = false;
+    [SerializeField] private bool isDoubleJumpResetable = false;
+    [Space]
+    [SerializeField] private bool isWallRunUnlocked = false;
+    [SerializeField] private float wallRunSpeed = 5f;
+    [Space]
+    [SerializeField] private bool isGrapplingUnlocked = false;
+    
 
 
     private CharacterController cc = null;
+    private Camera playerCamera = null;
 
     private int stopMovement = 0;
+    private bool isWallRunning = false;
+    private bool isGrappling = false;
 
 
     private Vector3 movementVector_;
@@ -43,9 +53,13 @@ public class PlayerMovement : MonoBehaviour
     private float xLook_ = 0;
     private float currentCameraRotation_X = 0;
 
+    private WallRunObject wallRunObject = null;
+    private Vector3 wallRunDir;
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        playerCamera = GetComponentInChildren<Camera>();
         jumpLevel_ = gravity;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -56,7 +70,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsMovementAllowed())
         {
-            cc.Move(DetermineMovementVector());
+            if (!isWallRunning && !isGrappling)
+                cc.Move(DetermineMovementVector());
+
             Rotation();
 
             if(cc.isGrounded)
@@ -67,7 +83,13 @@ public class PlayerMovement : MonoBehaviour
 
             jumpLevel_ -= Time.deltaTime * loseJumpLevelSpeed;
             jumpLevel_ = Mathf.Clamp(jumpLevel_, gravity, Mathf.Infinity);
-            print(jumpLevel_);
+          //  print(jumpLevel_);
+        }
+
+        if(isWallRunning)
+        {
+            WallRun();
+            CheckWallRunBreak();
         }
     }
 
@@ -76,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 DetermineMovementVector()
     {
+        
 
         horizontalInput_ = Input.GetAxis("Horizontal");
         verticalInput_ = Input.GetAxis("Vertical");
@@ -127,6 +150,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void RotatePlayer(float _x)
     {
+        if(isWallRunning) { return; }
+
         if (_x == 0) { return; }
 
         yLook_ = _x * rotateSensitivity * Time.deltaTime;
@@ -147,6 +172,17 @@ public class PlayerMovement : MonoBehaviour
         playerCamera.transform.localEulerAngles = new Vector3(currentCameraRotation_X, 0f, 0f);
     }
     #endregion
+
+
+   
+    
+    private void CheckWallRunBreak()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            EndWallRun();
+        }
+    }
 
 
     private bool IsMovementAllowed()
@@ -179,6 +215,96 @@ public class PlayerMovement : MonoBehaviour
 
     public void GiveDoubleJump()
     {
+        if (!isDoubleJumpResetable) { return; }
+
         doubleJumpCounter = 1;
     }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (!isWallRunUnlocked) { return; }
+
+        if (hit.gameObject.layer == 8 /*Wall run layer*/ )
+        {
+            if(isWallRunning) { return; }
+
+           WallRunObject _wro = hit.gameObject.GetComponent<WallRunObject>();
+
+            StartWallRun(_wro,_wro.runDirection.forward);
+        }
+    }
+
+   
+
+
+    public void StartWallRun(WallRunObject _wro, Vector3 _runDir)
+    {
+        // check run direction
+
+        if(Vector3.Dot(transform.forward,_runDir) < 0)
+        {
+            _runDir = -_runDir;
+        }
+
+        wallRunDir = _runDir;
+        jumpLevel_ = 0;
+
+        isWallRunning = true;
+        wallRunObject = _wro;
+
+        if(isDoubleJumpResetable)
+        {
+            doubleJumpCounter = 1;
+        }
+    }
+
+    private void WallRun()
+    {
+        cc.Move(wallRunDir * Time.deltaTime * wallRunSpeed);
+
+        print((wallRunObject.transform.position - transform.position).magnitude + " " + wallRunObject.breakDistance);
+
+        if ((wallRunObject.transform.position - transform.position).magnitude > wallRunObject.breakDistance)
+        {
+            EndWallRun();
+        }
+    }
+
+    public void EndWallRun()
+    {
+        isWallRunning = false;
+        wallRunObject = null;
+
+        jumpLevel_ = jumpStrenght;
+    }
+
+
+
+    public Vector3 GetPlayerVelocity()
+    {
+        return cc.velocity;
+    }
+
+    public void StartedGrappling()
+    {
+        isGrappling = true;
+        cc.enabled = false;
+        
+    }
+
+    public void EndedGrappling()
+    {
+        jumpLevel_ = jumpStrenght;
+
+        if (isDoubleJumpResetable)
+        {
+            doubleJumpCounter = 1;
+        }
+
+        isGrappling = false;
+        cc.enabled = true;
+    }
+
+
+  
 }
