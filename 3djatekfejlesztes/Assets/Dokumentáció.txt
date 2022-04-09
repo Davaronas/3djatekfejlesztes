@@ -2,6 +2,19 @@
 Leírás:
 3D platformer/puzzle játék.
 
+A játék célja hogy a pályák végén elérjünk egy "beacon"-t és E betûvel interaktáljunk vele.
+
+WASD-vel mozgunk, egérrel körbenézünk. Ha a UI jelzi nekünk, akkor E betûvel tudunk interakcióba lépni
+bizonyos tárgyakkal. Ha egy kék és egy piros háromszöget látunk a képernyõn, azt jelenti
+hogy éppen egy olyan tárgyra nézünk, amit tudunk telekinézissel befolyásolni.
+Bal kattintóval eldobjuk magunktól, jobbal pedig magunkhoz húzzuk, utóbbit le is tudjuk
+nyomva tartani hogy lebegjen magunk elõtt.
+
+A modellek saját készítésûek. A skyboxok a SkyBox Volume 2 ingyenes assetbõl származnak. 
+Sci-Fi UI nevû ingyenes assetet használok a gombokhoz, és innen származik a font is.
+A gombokon kívül a többi UI elemet én készítettem.
+A zenék és egyéb hangok a freesound.org-ról vannak.
+
 
 
 
@@ -14,7 +27,7 @@ A játék billentyûzettel vagy egérrel interaktívan játszható
 		.
 
 Szerepel valamilyen ellenfél (akár az idõ is lehet) a játékban
-		Ilyen jelenleg nincs. 
+		Ilyen jelenleg nincs szerintem.
 
 A játék rendelkezik felhasználói felülettel (UI), ami tájékoztatja a usert az elért eredményeirõl
 		Elért eredményekrõl nem tájékoztat, de a játékos számára lehetséges cselekvéseket jelzi
@@ -35,7 +48,8 @@ Technikai jellegû megvalósítás: a játék tartalmazzon valamilyen jellegû ütközésd
 		Van sokféle.
 
 A játékélmény fokozására: zenék, hangeffektek, illetve akár animációk vagy részecskerendszerek
-		Hangok, zene.
+		Hangok, zene. Saját programozású animációk 
+		(A és B állapot között iterálunk, akár pozíció, akár méret)
 
 Hatékony implementáció, szkriptek egymás közti kommunikációja megoldott
 		.
@@ -47,6 +61,8 @@ Ismert hibák:---
 
 Amikor elindul újra az idõ megállítás után valamiért a CharacterController.isGrounded hamisra vált, hiába vagyunk a földön,
 ez azt eredményezi hogy leérkezés hangot hallhatunk ilyenkor, és a dupla ugrás ikon megjelenik egy framere.
+
+LevitatorRingek néha nem mozognak egyenletesen, néha nagyobb távolság keletkezik a gyûrûk között mint az eredeti.
 ----------------
 
 
