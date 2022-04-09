@@ -27,16 +27,32 @@ public class PlayerAbilities : MonoBehaviour
 
     private RaycastHit rh_;
 
+    private bool isGamePaused = false;
+
     // Start is called before the first frame update
     void Start()
     {
         playerCamera = GetComponentInChildren<Camera>();
         playerMovement = GetComponent<PlayerMovement>();
+
+        Pause.OnGamePaused += GamePaused;
+    }
+
+    private void OnDestroy()
+    {
+        Pause.OnGamePaused -= GamePaused;
+    }
+
+    private void GamePaused(bool _state)
+    {
+        isGamePaused = _state;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(isGamePaused) { return; }
+
         ForcePush();
         ForcePull();
         ForceGrab();

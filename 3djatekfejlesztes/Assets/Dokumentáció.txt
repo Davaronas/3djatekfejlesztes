@@ -1,0 +1,64 @@
+
+Leírás:
+3D platformer/puzzle játék.
+
+
+
+
+KÖVETELMÉNYEK------------------------------------------------------------------------
+
+A játéknak legyen jól megfogalmazható célja, értelme
+		A pálya végén található beaconoket el kell érni, és interaktálni kell velük
+
+A játék billentyûzettel vagy egérrel interaktívan játszható
+		.
+
+Szerepel valamilyen ellenfél (akár az idõ is lehet) a játékban
+		Ilyen jelenleg nincs. 
+
+A játék rendelkezik felhasználói felülettel (UI), ami tájékoztatja a usert az elért eredményeirõl
+		Elért eredményekrõl nem tájékoztat, de a játékos számára lehetséges cselekvéseket jelzi
+
+A játék egyértelmûen véget tud érni, game over funkció teljes implementálása
+		Ilyen jelenleg nincs.
+
+A játék rendelkezik egy egyszerû menürendszerrel, amivel a játék elindítható, szüneteltethetõ, újraindítható
+		A játék megállítható, onnan ki tudunk lépni vagy a fõmenübe vagy az asztalra.
+
+A játék komplexebb modelleket, nem pedig primitíveket használ: vagy megfelelõ licensszel rendelkezõt (pl. Unity Asset Store) vagy saját készítésû modellt
+		Saját modellek.
+
+A játék nehézsége növelhetõ legyen (pl. több pálya vagy szint)
+		Jelenleg kettõ pálya van, többet terveztem de sajnos idõ hiányában nem valószínû hogy készítek többet.
+
+Technikai jellegû megvalósítás: a játék tartalmazzon valamilyen jellegû ütközésdetektálást
+		Van sokféle.
+
+A játékélmény fokozására: zenék, hangeffektek, illetve akár animációk vagy részecskerendszerek
+		Hangok, zene.
+
+Hatékony implementáció, szkriptek egymás közti kommunikációja megoldott
+		.
+----------------------------------------------------------------------------------------
+
+
+
+Ismert hibák:---
+
+Amikor elindul újra az idõ megállítás után valamiért a CharacterController.isGrounded hamisra vált, hiába vagyunk a földön,
+ez azt eredményezi hogy leérkezés hangot hallhatunk ilyenkor, és a dupla ugrás ikon megjelenik egy framere.
+----------------
+
+
+
+Ismert nem feltétlenül szándékozott viselkedések:---
+
+Ha egy mozgatható tárgyat magunk alá teszünk tudunk rajta ugrani, ezáltal a végtelenségig tudunk repülni.
+A pálya designt úgy csináltam hogy ez ne okozzon problémát.
+
+A DoubleJumpReset class a játékos hozzáérésekor ad nekünk egy ugrást. 
+Ezeket tudjuk gyûjteni (ezt azért csináltam mert így kényelmesebb a játékosnak, hiszen ha van már egy plusz
+ugrásunk akkor nem kapunk semmit hiába hozzáértünk egy ilyen objektumhoz), amig valami nem állítja 
+át ismét 1-re vagy 0-ra ezt az értékünket. Ez azt jelenti hogy akár egymás után sokszor is tudunk ugrani,
+nem csak a kényelmességet javitja, de lehetséges pályarészeket vele skippelni.
+-----------------------------------------------------

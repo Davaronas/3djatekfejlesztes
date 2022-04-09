@@ -12,6 +12,7 @@ public class DoubleJumpReset : MonoBehaviour
         {
             player = other.GetComponent<PlayerMovement>();
             player.GiveDoubleJump();
+            print("WTF");
         }
     }
 
