@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,18 +68,27 @@ public class PlayerMovement : MonoBehaviour
     private float wallRunAngle_ = 0;
 
     private bool isGamePaused = false;
+    private bool isGameOver = false;
 
-    private PlayerAudio playerAudio = null;
+    private PlayerEffects playerEffects = null;
     
 
     private bool lastFrameGroundedState_ = true;
-    private Coroutine HeadBobCoroutine = null;
+    private Coroutine headBobCoroutine = null;
 
     private Vector3 cameraBasePos;
+    private Quaternion cameraBaseRot;
     private float headBobProgress = 0f;
     [SerializeField] private Vector3 y_cameraMoveHeadBob = new Vector3(0,0.2f,0);
     [SerializeField] private float headBobDownSpeed = 5f;
     [SerializeField] private float headBobUpSpeed = 5f;
+    [Space]
+    [SerializeField] private Transform deathCameraPosRot = null;
+    [SerializeField] private float deathCameraLerpSpeed = 5f;
+
+
+    private bool firstMoveDone = false;
+    public static Action OnFirstMovement;
 
     void Start()
     {
@@ -89,19 +99,24 @@ public class PlayerMovement : MonoBehaviour
         playerGrappling = GetComponent<PlayerGrapple>();
         jumpLevel_ = gravity;
 
-        playerAudio = GetComponent<PlayerAudio>();
+        playerEffects = GetComponent<PlayerEffects>();
         cameraBasePos = playerCamera.transform.localPosition;
+        cameraBaseRot = playerCamera.transform.localRotation;
 
         doubleJumpIcon = FindObjectOfType<Canvas>().transform.Find("DoubleJumpIcon").GetComponent<Image>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
         Pause.OnGamePaused += GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision += GameOver;
+
+       
     }
 
     private void OnDestroy()
     {
         Pause.OnGamePaused -= GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision -= GameOver;
     }
 
 
@@ -112,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(_state == true)
         {
-            playerAudio.StopRun();
+            playerEffects.Audio_StopRun();
         }
         else
         {
@@ -120,10 +135,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void GameOver()
+    {
+        isGameOver = true;
+        StartCoroutine(LerpToCameraDeathPosition());
+
+        doubleJumpIcon.enabled = false;
+        playerEffects.Audio_StopRun();
+        playerEffects.Audio_Lava();
+        playerEffects.ScreenEffect_Lava();
+    }
+
     void Update()
     {
         
-        if (isGamePaused)
+        if (isGamePaused || isGameOver)
         {
             return; 
         }
@@ -186,12 +212,12 @@ public class PlayerMovement : MonoBehaviour
             {
               //  if (jumpLevel_ <  jumpStrenght /2)
                 {
-                    if (HeadBobCoroutine != null)
-                        StopCoroutine(HeadBobCoroutine);
-                    HeadBobCoroutine = StartCoroutine(HeadBob());
+                    if (headBobCoroutine != null)
+                        StopCoroutine(headBobCoroutine);
+                    headBobCoroutine = StartCoroutine(HeadBob());
                 }
 
-                playerAudio.Land();
+                playerEffects.Audio_Land();
             }
         }
 
@@ -223,6 +249,32 @@ public class PlayerMovement : MonoBehaviour
 
         yield return null;
     }
+
+
+    IEnumerator LerpToCameraDeathPosition()
+    {
+
+        if(headBobCoroutine != null)
+        {
+            StopCoroutine(headBobCoroutine);
+            headBobCoroutine = null;
+        }
+
+        float _deathCamLerpProgress = 0;
+
+        while (_deathCamLerpProgress < 1)
+        {
+            playerCamera.transform.localPosition = Vector3.Lerp(cameraBasePos, deathCameraPosRot.localPosition, _deathCamLerpProgress + (deathCameraLerpSpeed * Time.deltaTime));
+            playerCamera.transform.localRotation = Quaternion.Lerp(cameraBaseRot, deathCameraPosRot.localRotation, _deathCamLerpProgress + (deathCameraLerpSpeed * Time.deltaTime));
+
+            _deathCamLerpProgress += deathCameraLerpSpeed * Time.deltaTime;
+
+            yield return new WaitForEndOfFrame();
+
+        }
+
+        yield return null;
+    }
         
 
     private Vector3 DetermineMovementVector()
@@ -239,11 +291,11 @@ public class PlayerMovement : MonoBehaviour
 
         if((horizontalVector_ != Vector3.zero || verticalVector_ != Vector3.zero) && cc.isGrounded)
         {
-            playerAudio.Running();
+            playerEffects.Audio_Running();
         }
         else
         {
-            playerAudio.StopRun();
+            playerEffects.Audio_StopRun();
         }
 
 
@@ -253,7 +305,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 jumpLevel_ = jumpStrenght;
 
-                playerAudio.Jump();
+                playerEffects.Audio_Jump();
             }
             else
             {
@@ -264,7 +316,7 @@ public class PlayerMovement : MonoBehaviour
                         jumpLevel_ = jumpStrenght;
                         doubleJumpCounter--;
 
-                        playerAudio.Jump();
+                        playerEffects.Audio_Jump();
                     }
                 }
             }
@@ -273,6 +325,16 @@ public class PlayerMovement : MonoBehaviour
         jumpVector_ = transform.up * jumpLevel_ * Time.deltaTime;
 
         movementVector_ = horizontalVector_ + verticalVector_ + jumpVector_;
+
+
+        if (!firstMoveDone)
+        {
+            if (horizontalInput_ > 0 || verticalInput_ > 0 || Input.GetKeyDown(KeyCode.Space))
+            {
+                firstMoveDone = true;
+                OnFirstMovement?.Invoke();
+            }
+        }
 
         return movementVector_;
     }
@@ -491,7 +553,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Quaternion.Slerp(playerCamera.transform.rotation, Quaternion.Euler(0f, wallRunCameraTiltAngle, 0f), wallRunCameraTurnSpeed); 
 
-        playerAudio.WallRunning();
+        playerEffects.Audio_WallRunning();
 
         if ((wallRunObject.transform.position - transform.position).magnitude > wallRunObject.breakDistance)
         {
@@ -506,8 +568,8 @@ public class PlayerMovement : MonoBehaviour
 
         jumpLevel_ = jumpStrenght;
 
-        playerAudio.StopRun();
-        playerAudio.Jump();
+        playerEffects.Audio_StopRun();
+        playerEffects.Audio_Jump();
     }
 
 
@@ -540,7 +602,7 @@ public class PlayerMovement : MonoBehaviour
         isGrappling = false;
         cc.enabled = true;
 
-        playerAudio.Jump();
+        playerEffects.Audio_Jump();
     }
 
 

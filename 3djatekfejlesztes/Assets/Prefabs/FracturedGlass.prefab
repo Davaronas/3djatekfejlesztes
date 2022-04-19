@@ -6511,7 +6511,9 @@ GameObject:
   - component: {fileID: 7393518278071739889}
   - component: {fileID: 1586508885}
   - component: {fileID: 1586508884}
-  m_Layer: 0
+  - component: {fileID: -3372661822100480799}
+  - component: {fileID: 1419897921091195240}
+  m_Layer: 13
   m_Name: FracturedGlass
   m_TagString: Breakable
   m_Icon: {fileID: 0}
@@ -6695,6 +6697,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   breakSound: {fileID: 8300000, guid: 5349c339560d1ad468267ea6a900141d, type: 3}
   maxBreaksAtOneTime: 8
+--- !u!114 &-3372661822100480799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7913067670879256395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 6
+  destroyColliderIfNotMapCreator: 1
+--- !u!65 &1419897921091195240
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7913067670879256395}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.5147018, y: 2.287596, z: 0.15312433}
+  m_Center: {x: -0.63515854, y: 1.1882175, z: -0.00000023841858}
 --- !u!1 &8555995147377892851
 GameObject:
   m_ObjectHideFlags: 0

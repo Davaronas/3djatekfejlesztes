@@ -5,9 +5,12 @@ using UnityEngine;
 public class WallRunObject : MonoBehaviour
 {
     public Transform runDirection;
-    public float breakDistance = 20f;
+    public float breakDistance = 7f;
 
-   
+    private void Start()
+    {
+        breakDistance = 7f * (transform.localScale.y / 100);
+    }
 
     /*
     private void OnTriggerEnter(Collider other)
@@ -57,5 +60,5 @@ public class WallRunObject : MonoBehaviour
     }
     */
 
- 
+
 }

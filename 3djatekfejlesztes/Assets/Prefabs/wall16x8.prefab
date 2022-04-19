@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9164178556095901569}
   - component: {fileID: 6397720191795059531}
   - component: {fileID: 5695031800591993082}
+  - component: {fileID: 7785117031919396699}
   m_Layer: 0
   m_Name: wall16x8
   m_TagString: Untagged
@@ -52,7 +53,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -96,3 +96,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3202775, y: 0.15998967, z: 0.0032583158}
   m_Center: {x: -0.000000015904423, y: 0.07998709, z: 0}
+--- !u!114 &7785117031919396699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4884638603653053086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

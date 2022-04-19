@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 8593851158460734803}
   - component: {fileID: 8593851158460734802}
   - component: {fileID: 8462140831229501600}
+  - component: {fileID: 4067855726653769120}
   m_Layer: 0
   m_Name: MassDetector
   m_TagString: MassDetector
@@ -322,6 +323,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4067855726653769120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8593851158460734801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c83a1410b26d040a66b110e62c39a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 13
+  destroyColliderIfNotMapCreator: 1
 --- !u!1 &8593851159736261964
 GameObject:
   m_ObjectHideFlags: 0

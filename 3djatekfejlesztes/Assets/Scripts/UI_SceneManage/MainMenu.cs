@@ -35,5 +35,15 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadSceneAsync(mapId);
     }
 
+    public void OpenCustomMapDirectory()
+    {
+        string _dirPath = Application.persistentDataPath;
+
+        _dirPath = _dirPath.Replace('/', '\\');
+
+        print(Application.persistentDataPath);
+        System.Diagnostics.Process.Start("explorer.exe", _dirPath);
+    }
+
 }
 

@@ -1,6 +1,6 @@
 
 Leírás:
-3D platformer/puzzle játék.
+3D platformer/puzzle játék. Számolja az idõnket a játék, és döntögethetjük a rekordjainkat.
 
 A játék célja hogy a pályák végén elérjünk egy "beacon"-t és E betûvel interaktáljunk vele.
 
@@ -16,6 +16,9 @@ A gombokon kívül a többi UI elemet én készítettem.
 A zenék és egyéb hangok a freesound.org-ról vannak.
 
 
+Három pályát készítettem.
+
+
 
 
 KÖVETELMÉNYEK------------------------------------------------------------------------
@@ -27,13 +30,13 @@ A játék billentyûzettel vagy egérrel interaktívan játszható
 		.
 
 Szerepel valamilyen ellenfél (akár az idõ is lehet) a játékban
-		Ilyen jelenleg nincs szerintem.
+		A játékos saját maga ? Idõt számolja a játék és mindig ki van irva hogy eddig mi volt a legjobb idõnk.
 
 A játék rendelkezik felhasználói felülettel (UI), ami tájékoztatja a usert az elért eredményeirõl
-		Elért eredményekrõl nem tájékoztat, de a játékos számára lehetséges cselekvéseket jelzi
+		Elért eredményekrõl nem tájékoztat, de a játékos számára lehetséges cselekvéseket jelzi, és az eddig eltelt idõt jelzi.
 
 A játék egyértelmûen véget tud érni, game over funkció teljes implementálása
-		Ilyen jelenleg nincs.
+		A harmadik pályán a láva meg tud minket ölni, innen megkapjuk a Pause menü elemeit, viszont nem áll meg az idõ
 
 A játék rendelkezik egy egyszerû menürendszerrel, amivel a játék elindítható, szüneteltethetõ, újraindítható
 		A játék megállítható, onnan ki tudunk lépni vagy a fõmenübe vagy az asztalra.
@@ -42,7 +45,7 @@ A játék komplexebb modelleket, nem pedig primitíveket használ: vagy megfelelõ li
 		Saját modellek.
 
 A játék nehézsége növelhetõ legyen (pl. több pálya vagy szint)
-		Jelenleg kettõ pálya van, többet terveztem de sajnos idõ hiányában nem valószínû hogy készítek többet.
+		Jelenleg három pálya van, többet terveztem de sajnos idõ hiányában nem valószínû hogy készítek többet.
 
 Technikai jellegû megvalósítás: a játék tartalmazzon valamilyen jellegû ütközésdetektálást
 		Van sokféle.
@@ -69,7 +72,7 @@ LevitatorRingek néha nem mozognak egyenletesen, néha nagyobb távolság keletkezik
 
 Ismert nem feltétlenül szándékozott viselkedések:---
 
-Ha egy mozgatható tárgyat magunk alá teszünk tudunk rajta ugrani, ezáltal a végtelenségig tudunk repülni.
+Ha egy mozgatható tárgyat magunk alatt lebegtetünk tudunk rajta ugrani, ezáltal a végtelenségig tudunk repülni.
 A pálya designt úgy csináltam hogy ez ne okozzon problémát.
 
 A DoubleJumpReset class a játékos hozzáérésekor ad nekünk egy ugrást. 

@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 2334954363882394868}
   - component: {fileID: 2334954363882394871}
   - component: {fileID: 7930388051581107792}
+  - component: {fileID: -5760367617147236230}
   m_Layer: 9
   m_Name: panel
   m_TagString: Untagged
@@ -208,6 +209,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-5760367617147236230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2334954363882394865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c83a1410b26d040a66b110e62c39a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 12
+  destroyColliderIfNotMapCreator: 0
 --- !u!1 &5889844928628378163
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,6 +25,7 @@ public class PlayerGrapple : MonoBehaviour
     private float grappleDistance_;
 
     private bool isGamePaused = false;
+    private bool isGameOver = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,11 +34,13 @@ public class PlayerGrapple : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
 
         Pause.OnGamePaused += GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision += GameOver;
     }
 
     private void OnDestroy()
     {
         Pause.OnGamePaused -= GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision -= GameOver;
     }
 
     private void GamePaused(bool _state)
@@ -45,10 +48,16 @@ public class PlayerGrapple : MonoBehaviour
         isGamePaused = _state;
     }
 
+    private void GameOver()
+    {
+        isGameOver = true;
+        StopGrapple();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (isGamePaused) { return; }
+        if (isGamePaused || isGameOver) { return; }
 
         if (!isGrapplingUnlocked) { return; }
 

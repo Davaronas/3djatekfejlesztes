@@ -67,6 +67,7 @@ namespace UnityTemplateProjects
         [Header("Rotation Settings")]
         [Tooltip("X = Change in mouse position.\nY = Multiplicative factor for camera rotation.")]
         public AnimationCurve mouseSensitivityCurve = new AnimationCurve(new Keyframe(0f, 0.5f, 0f, 5f), new Keyframe(1f, 2.5f, 0f, 0f));
+        [SerializeField] public float mouseSensitivityMultiplier = 5f;
 
         [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
         public float rotationLerpTime = 0.01f;
@@ -163,6 +164,8 @@ namespace UnityTemplateProjects
         {
             // Exit Sample  
 
+            boost = 3.5f;
+
             if (IsEscapePressed())
             {
                 Application.Quit();
@@ -191,7 +194,7 @@ namespace UnityTemplateProjects
                 if (invertY)
                     mouseMovement.y = -mouseMovement.y;
                 
-                var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
+                var mouseSensitivityFactor = mouseSensitivityMultiplier * Time.deltaTime * mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
 
                 m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
                 m_TargetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
@@ -267,7 +270,7 @@ namespace UnityTemplateProjects
             canRotate |= Gamepad.current != null ? Gamepad.current.rightStick.ReadValue().magnitude > 0 : false;
             return canRotate;
 #else
-            return Input.GetMouseButton(1);
+            return  Input.GetMouseButton(1);
 #endif
         }
 

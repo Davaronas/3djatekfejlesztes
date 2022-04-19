@@ -25,6 +25,7 @@ public class PlayerRaycaster : MonoBehaviour
     private RaycastHit rh_;
 
     private bool isGamePaused = false;
+    private bool isGameOver = false;
 
 
     void Start()
@@ -38,11 +39,13 @@ public class PlayerRaycaster : MonoBehaviour
         aidIcon.enabled = false;
 
         Pause.OnGamePaused += GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision += GameOver;
     }
 
     private void OnDestroy()
     {
         Pause.OnGamePaused -= GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision -= GameOver;
     }
 
     private void GamePaused(bool _state)
@@ -50,9 +53,24 @@ public class PlayerRaycaster : MonoBehaviour
         isGamePaused = _state;
     }
 
+    private void GameOver()
+    {
+        isGameOver = true;
+    }
+
 
     void Update()
     {
+        if (isGameOver) 
+        {
+            if (aidIcon.enabled)
+            {
+                aidIcon.enabled = false;
+            }
+
+            return; 
+        }
+
         raycastFoundTarget = false;
 
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out rh_, raycastDistance,raycastLayers))

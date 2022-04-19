@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5223607072088073918}
   - component: {fileID: 5977486127032010874}
   - component: {fileID: 3463350136967366511}
+  - component: {fileID: -2274244990351341334}
   m_Layer: 7
   m_Name: box
   m_TagString: Untagged
@@ -223,3 +224,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fd87c62e3b60443a3ec9dafa7b59f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2274244990351341334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5223607072088073917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 0
+  destroyColliderIfNotMapCreator: 0
+  destroyRigidbodyIfMapCreator: 1

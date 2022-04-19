@@ -330,9 +330,9 @@ GameObject:
   - component: {fileID: 1967625315889728466}
   - component: {fileID: 439004008}
   - component: {fileID: 439004009}
-  - component: {fileID: 1080809056}
   - component: {fileID: 2000189386}
   - component: {fileID: 1958696804}
+  - component: {fileID: -6723359746997581058}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -354,6 +354,7 @@ Transform:
   - {fileID: 1967625316286391096}
   - {fileID: 9159914844686285367}
   - {fileID: 272191034}
+  - {fileID: 5011336015822590216}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -405,6 +406,8 @@ MonoBehaviour:
   y_cameraMoveHeadBob: {x: 0, y: 0.3, z: 0}
   headBobDownSpeed: 15
   headBobUpSpeed: 7
+  deathCameraPosRot: {fileID: 5011336015822590216}
+  deathCameraLerpSpeed: 1.3
 --- !u!114 &1967625315889728466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,18 +469,6 @@ MonoBehaviour:
   lineRenderer: {fileID: 1635888848}
   grapplePos: {fileID: 9159914844686285367}
   physicMaterialForGrappling: {fileID: 13400000, guid: 44682fc894032ab488990cb42e3336a0, type: 2}
---- !u!114 &1080809056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967625315889728462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4e3e87077466e3459f7f1c2efffba70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2000189386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,6 +498,22 @@ MonoBehaviour:
   walkSound: {fileID: 8300000, guid: d0d064e6a10ad2642b9103e0123f49ca, type: 3}
   jumpSound: {fileID: 8300000, guid: 72e787d426aae8d4e87a08d629c69af9, type: 3}
   landingSound: {fileID: 8300000, guid: a102362f7285ca64f969853e11d60a47, type: 3}
+  lavaSound: {fileID: 8300000, guid: b84e28e5b3b077548b4101222e207501, type: 3}
+  lavaScreenEffectBaseColor: {r: 1, g: 0.94998825, b: 0, a: 0}
+  lavaScreenEffectTurnedColor: {r: 0.7019608, g: 0, b: 0, a: 0.19607843}
+  lavaScreenEffectLerpSpeed: 0.5
+--- !u!114 &-6723359746997581058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967625315889728462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1967625316286391092
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,7 +571,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 70
   orthographic: 0
@@ -625,6 +632,36 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1 &2126713496656842784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5011336015822590216}
+  m_Layer: 6
+  m_Name: DeathCamPosRot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5011336015822590216
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126713496656842784}
+  m_LocalRotation: {x: 0.53365767, y: -0.4391813, z: -0.38202274, w: 0.6135046}
+  m_LocalPosition: {x: 0, y: -0.553, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1967625315889728467}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 18.617, y: -87.299, z: -81.594}
 --- !u!1 &2802421112551929503
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,10 +10,11 @@ public class Pause : MonoBehaviour
     public static Action<bool> OnGamePaused;
 
     private GameObject pausePanel;
+    private Button restartButton;
     private Button exitToMainMenuButton;
     private Button exitToDesktopButton;
 
-    
+    private bool isGameOver = false;
 
     private void Awake()
     {
@@ -26,16 +27,39 @@ public class Pause : MonoBehaviour
         exitToDesktopButton = pausePanel.transform.Find("ExitToDesktop").GetComponent<Button>();
         exitToDesktopButton.onClick.AddListener(() => Quit());
 
+        restartButton = pausePanel.transform.Find("Restart").GetComponent<Button>();
+        restartButton.onClick.AddListener(() => Restart());
 
         pausePanel.SetActive(false);
+
+
+        DeathCollider.OnPlayerDeadlyCollision += GameOver;
     }
 
+    private void OnDestroy()
+    {
+        DeathCollider.OnPlayerDeadlyCollision -= GameOver;
+    }
+
+
+    private void GameOver()
+    {
+        isGameOver = true;
+        pausePanel.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     public void LoadMainMenu()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
 
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Quit()
@@ -47,6 +71,8 @@ public class Pause : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isGameOver) { return; }
+
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             if(!pausePanel.activeSelf)

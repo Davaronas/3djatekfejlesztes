@@ -28,6 +28,7 @@ public class PlayerAbilities : MonoBehaviour
     private RaycastHit rh_;
 
     private bool isGamePaused = false;
+    private bool isGameOver = false;
 
     // Start is called before the first frame update
     void Start()
@@ -36,11 +37,13 @@ public class PlayerAbilities : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
 
         Pause.OnGamePaused += GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision += GameOver;
     }
 
     private void OnDestroy()
     {
         Pause.OnGamePaused -= GamePaused;
+        DeathCollider.OnPlayerDeadlyCollision -= GameOver;
     }
 
     private void GamePaused(bool _state)
@@ -48,10 +51,15 @@ public class PlayerAbilities : MonoBehaviour
         isGamePaused = _state;
     }
 
+    private void GameOver()
+    {
+        isGameOver = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(isGamePaused) { return; }
+        if(isGamePaused || isGameOver) { return; }
 
         ForcePush();
         ForcePull();

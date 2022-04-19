@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4261287814665701684}
   - component: {fileID: 4261287814665701685}
   - component: {fileID: 4261287814665701642}
+  - component: {fileID: -7772246059733197753}
   m_Layer: 0
   m_Name: wall16x16_dobleside
   m_TagString: Untagged
@@ -52,7 +53,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -96,3 +96,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.32027748, y: 0.3199638, z: 0.0028640577}
   m_Center: {x: 0, y: 0, z: 0.00019712877}
+--- !u!114 &-7772246059733197753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4261287814665701643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 1
+  destroyColliderIfNotMapCreator: 0
