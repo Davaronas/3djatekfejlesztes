@@ -6,6 +6,7 @@ public class GridDoor : MonoBehaviour
 {
     [SerializeField] private Interactable attachedInteractable = null;
 
+
     private void Start()
     {
         if(attachedInteractable == null) { return; }
@@ -31,5 +32,10 @@ public class GridDoor : MonoBehaviour
     private void Close()
     {
         gameObject.SetActive(true);
+    }
+
+    public void SetInteractable(Interactable _i)
+    {
+        attachedInteractable = _i;
     }
 }

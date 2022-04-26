@@ -5,6 +5,14 @@ using UnityEngine.UI;
 using System;
 using UnityTemplateProjects;
 using UnityEngine.EventSystems;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using UnityEngine.SceneManagement;
+
+// BUGS
+
+// 
+
 
 public class MC_Manager : MonoBehaviour
 {
@@ -95,6 +103,13 @@ public class MC_Manager : MonoBehaviour
     [SerializeField] private Button prefabButtons_Light_showButton;
 
 
+    private bool realView = false;
+    [Space]
+    [SerializeField] private GameObject postProcessing;
+    [SerializeField] private Light dirLight;
+    [SerializeField] private Material[] skyboxes;
+    private int skyboxMatId = 0;
+
 
 
     private Vector3 targetPos_;
@@ -130,6 +145,8 @@ public class MC_Manager : MonoBehaviour
 
     void Start()
     {
+
+        Cursor.lockState = CursorLockMode.None;
 
         directions = new Directions[6];
         directions[0].id = 0;
@@ -383,12 +400,12 @@ public class MC_Manager : MonoBehaviour
     {
         if(int.TryParse(doorId_InputField.text,out int _id))
         {
-            targetDoor.SetDoorId(_id);
+            targetDoor.SetAttachedInteractableId(_id);
         }
         else
         {
             doorId_InputField.text = "0";
-            targetDoor.SetDoorId(0);
+            targetDoor.SetAttachedInteractableId(0);
         }
     }
 
@@ -487,7 +504,7 @@ public class MC_Manager : MonoBehaviour
 
         if(currentTarget.TryGetComponent<MC_Door>(out targetDoor))
         {
-            doorId_InputField.text = targetDoor.GetDoorId().ToString();
+            doorId_InputField.text = targetDoor.GetAttachedInteractableId().ToString();
             selectedObjectAdditionInfoPanel.SetActive(true);
             selectedObjectDoorInfo.SetActive(true);
         }
@@ -608,7 +625,7 @@ public class MC_Manager : MonoBehaviour
 
         if (currentTarget.TryGetComponent<MC_Door>(out targetDoor))
         {
-            doorId_InputField.text = targetDoor.GetDoorId().ToString();
+            doorId_InputField.text = targetDoor.GetAttachedInteractableId().ToString();
             selectedObjectAdditionInfoPanel.SetActive(true);
             selectedObjectDoorInfo.SetActive(true);
         }
@@ -1022,7 +1039,6 @@ public class MC_Manager : MonoBehaviour
     {
         scc.enabled = false;
 
-        print("WTF " + _orientation);
         switch(_orientation)
         {
             case 0: // X
@@ -1166,11 +1182,18 @@ public class MC_Manager : MonoBehaviour
     public void SaveMap()
     {
         MC_MapData _mapData = new MC_MapData();
+        _mapData.baseObjects = new List<MC_BasePrefabData>();
+        _mapData.interactableObjects = new List<MC_InteractablePrefabData>();
+        _mapData.bridgeObjects = new List<MC_BridgePrefabData>();
+        _mapData.doorObjects = new List<MC_DoorPrefabData>();
+        _mapData.lightObjects = new List<MC_LightPrefabData>();
+        _mapData.lightControlObjects = new List<MC_LightControlPrefabData>();
 
         MC_PlayerPos _playerPos = FindObjectOfType<MC_PlayerPos>();
         MC_MapEnd _mapEnd = FindObjectOfType<MC_MapEnd>();
 
         List<MC_Prefab> _allPrefabs = new List<MC_Prefab>(FindObjectsOfType<MC_Prefab>());
+        _allPrefabs.Remove(_playerPos.GetComponent<MC_Prefab>());
 
         List<MC_Door> _doors = new List<MC_Door>(FindObjectsOfType<MC_Door>());
         List<MC_Interactable> _interactables = new List<MC_Interactable>(FindObjectsOfType<MC_Interactable>());
@@ -1178,7 +1201,12 @@ public class MC_Manager : MonoBehaviour
         List<MC_LightControl> _lightControls = new List<MC_LightControl>(FindObjectsOfType<MC_LightControl>());
         List<MC_Bridge> _bridges = new List<MC_Bridge>(FindObjectsOfType<MC_Bridge>());
 
-
+        print(_allPrefabs == null);
+        print(_doors == null);
+        print(_interactables == null);
+        print(_lamps == null);
+        print(_lightControls == null);
+        print(_bridges == null);
 
         _mapData.playerData.prefabId = _playerPos.GetComponent<MC_Prefab>().prefabId;
 
@@ -1207,8 +1235,11 @@ public class MC_Manager : MonoBehaviour
         {
             MC_DoorPrefabData _doorData = new MC_DoorPrefabData();
 
-            _doorData.prefabId = _doors[i].GetComponent<MC_Prefab>().prefabId;
-            _doorData.attachedInteractableId = _doors[i].GetDoorId();
+            MC_Prefab _p = _doors[i].GetComponent<MC_Prefab>();
+            _allPrefabs.Remove(_p);
+
+            _doorData.prefabId = _p.prefabId;
+            _doorData.attachedInteractableId = _doors[i].GetAttachedInteractableId();
 
             _doorData.positionX = _doors[i].transform.position.x;
             _doorData.positionY = _doors[i].transform.position.y;
@@ -1229,7 +1260,10 @@ public class MC_Manager : MonoBehaviour
         {
             MC_InteractablePrefabData _interactableData = new MC_InteractablePrefabData();
 
-            _interactableData.prefabId = _interactables[i].GetComponent<MC_Prefab>().prefabId;
+            MC_Prefab _p = _interactables[i].GetComponent<MC_Prefab>();
+            _allPrefabs.Remove(_p);
+
+            _interactableData.prefabId = _p.prefabId;
             _interactableData.interactableId= _interactables[i].GetInteractableId();
 
             _interactableData.positionX = _interactables[i].transform.position.x;
@@ -1247,9 +1281,183 @@ public class MC_Manager : MonoBehaviour
             _mapData.interactableObjects.Add(_interactableData);
         }
 
+        for (int i = 0; i < _lamps.Count; i++)
+        {
+            MC_LightPrefabData _lampData = new MC_LightPrefabData();
 
+            MC_Prefab _p = _lamps[i].GetComponent<MC_Prefab>();
+            _allPrefabs.Remove(_p);
+
+
+            _lampData.prefabId = _p.prefabId;
+            _lampData.lightId = _lamps[i].GetLampId();
+            _lampData.attachedLightControlId = _lamps[i].GetLightControlId();
+
+            _lampData.positionX = _lamps[i].transform.position.x;
+            _lampData.positionY = _lamps[i].transform.position.y;
+            _lampData.positionZ = _lamps[i].transform.position.z;
+
+            _lampData.rotationX = _lamps[i].transform.rotation.eulerAngles.x;
+            _lampData.rotationY = _lamps[i].transform.rotation.eulerAngles.y;
+            _lampData.rotationZ = _lamps[i].transform.rotation.eulerAngles.z;
+
+            _lampData.scaleX = _lamps[i].transform.localScale.x;
+            _lampData.scaleY = _lamps[i].transform.localScale.y;
+            _lampData.scaleZ = _lamps[i].transform.localScale.z;
+
+            _lampData.headRotationX = _lamps[i].GetLampHeadRotation().x;
+            _lampData.headRotationY = _lamps[i].GetLampHeadRotation().y;
+            _lampData.headRotationZ = _lamps[i].GetLampHeadRotation().z;
+
+            _mapData.lightObjects.Add(_lampData);
+        }
+
+
+        for (int i = 0; i < _lightControls.Count; i++)
+        {
+            MC_LightControlPrefabData _lightControlData = new MC_LightControlPrefabData();
+
+            MC_Prefab _p = _lightControls[i].GetComponent<MC_Prefab>();
+            _allPrefabs.Remove(_p);
+
+            _lightControlData.prefabId = _p.prefabId;
+            _lightControlData.lightControlId = _lightControls[i].GetLightControlId();
+
+            _lightControlData.positionX = _lightControls[i].transform.position.x;
+            _lightControlData.positionY = _lightControls[i].transform.position.y;
+            _lightControlData.positionZ = _lightControls[i].transform.position.z;
+
+            _lightControlData.rotationX = _lightControls[i].transform.rotation.eulerAngles.x;
+            _lightControlData.rotationY = _lightControls[i].transform.rotation.eulerAngles.y;
+            _lightControlData.rotationZ = _lightControls[i].transform.rotation.eulerAngles.z;
+
+            _lightControlData.scaleX = _lightControls[i].transform.localScale.x;
+            _lightControlData.scaleY = _lightControls[i].transform.localScale.y;
+            _lightControlData.scaleZ = _lightControls[i].transform.localScale.z;
+
+            _mapData.lightControlObjects.Add(_lightControlData);
+        }
+
+        for (int i = 0; i < _bridges.Count; i++)
+        {
+            MC_BridgePrefabData _bridgeData = new MC_BridgePrefabData();
+
+
+            MC_Prefab _p = _bridges[i].GetComponent<MC_Prefab>();
+            _allPrefabs.Remove(_p);
+
+            _bridgeData.prefabId = _p.prefabId;
+            _bridgeData.bridgeId= _bridges[i].GetBridgeId();
+            _bridgeData.attachedInteractableId = _bridges[i].GetattachedInteractableId();
+
+            _bridgeData.positionX = _bridges[i].transform.position.x;
+            _bridgeData.positionY = _bridges[i].transform.position.y;
+            _bridgeData.positionZ = _bridges[i].transform.position.z;
+
+            _bridgeData.rotationX = _bridges[i].transform.rotation.eulerAngles.x;
+            _bridgeData.rotationY = _bridges[i].transform.rotation.eulerAngles.y;
+            _bridgeData.rotationZ = _bridges[i].transform.rotation.eulerAngles.z;
+
+            _bridgeData.scaleX = _bridges[i].transform.localScale.x;
+            _bridgeData.scaleY = _bridges[i].transform.localScale.y;
+            _bridgeData.scaleZ = _bridges[i].transform.localScale.z;
+
+            _bridgeData.scaleToX = _bridges[i].GetScaleTo().x;
+            _bridgeData.scaleToY = _bridges[i].GetScaleTo().y;
+            _bridgeData.scaleToZ = _bridges[i].GetScaleTo().z;
+
+            _mapData.bridgeObjects.Add(_bridgeData);
+        }
+
+        for (int i = 0; i < _allPrefabs.Count; i++)
+        {
+            MC_BasePrefabData _basePrefabData = new MC_BasePrefabData();
+
+            MC_Prefab _p = _allPrefabs[i].GetComponent<MC_Prefab>();
+
+            _basePrefabData.prefabId = _p.prefabId;
+
+            _basePrefabData.positionX = _allPrefabs[i].transform.position.x;
+            _basePrefabData.positionY = _allPrefabs[i].transform.position.y;
+            _basePrefabData.positionZ = _allPrefabs[i].transform.position.z;
+
+            _basePrefabData.rotationX = _allPrefabs[i].transform.rotation.eulerAngles.x;
+            _basePrefabData.rotationY = _allPrefabs[i].transform.rotation.eulerAngles.y;
+            _basePrefabData.rotationZ = _allPrefabs[i].transform.rotation.eulerAngles.z;
+
+            _basePrefabData.scaleX = _allPrefabs[i].transform.localScale.x;
+            _basePrefabData.scaleY = _allPrefabs[i].transform.localScale.y;
+            _basePrefabData.scaleZ = _allPrefabs[i].transform.localScale.z;
+
+            _mapData.baseObjects.Add(_basePrefabData);
+        }
+
+
+        
+        _mapData.skyboxMatId = skyboxMatId;
+
+
+        string _path = Application.persistentDataPath + "/CustomMaps/";
+        if(!Directory.Exists(_path))
+        {
+            Directory.CreateDirectory(_path);
+        }
+        FileInfo fileInfo2 = new FileInfo(_path + "CustomMap1.mapdata");
+
+        if (File.Exists(_path + "CustomMap1.mapdata"))
+        {
+            fileInfo2.IsReadOnly = false;
+        }
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(_path + "CustomMap1.mapdata", FileMode.Create);
+        formatter.Serialize(stream, _mapData);
+        stream.Close();
+        FileInfo fileInfo = new FileInfo(_path);
+        fileInfo.IsReadOnly = true;
+        fileInfo2.IsReadOnly = true;
     }
 
 
+
+    public void ChangeViewType()
+    {
+        realView = !realView;
+
+        if(realView)
+        {
+            mainCam.clearFlags = CameraClearFlags.Skybox;
+            postProcessing.SetActive(true);
+            dirLight.enabled = false;
+        }
+        else
+        {
+            mainCam.clearFlags = CameraClearFlags.SolidColor;
+            postProcessing.SetActive(false);
+            dirLight.enabled = true;
+
+        }
+    }
+
+
+    public void SetSkybox(int _s)
+    {
+
+        RenderSettings.skybox = skyboxes[_s];
+        skyboxMatId = _s;
+    }
+
+
+
+
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void GoToCustomMap()
+    {
+        SceneManager.LoadScene(2);
+    }
 
 }

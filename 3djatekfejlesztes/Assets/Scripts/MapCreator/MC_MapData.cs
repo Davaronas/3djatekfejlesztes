@@ -12,8 +12,9 @@ public struct MC_MapData
     public List<MC_InteractablePrefabData> interactableObjects;
     public List<MC_LightPrefabData> lightObjects;
     public List<MC_LightControlPrefabData> lightControlObjects;
-    public List<MC_Bridge> bridgeObjects;
+    public List<MC_BridgePrefabData> bridgeObjects;
     public List<MC_BasePrefabData> baseObjects;
+    public int skyboxMatId;
 }
 
 [System.Serializable]
@@ -126,6 +127,8 @@ public struct MC_LightPrefabData
     public float headRotationZ;
 }
 
+
+[System.Serializable]
 public struct MC_LightControlPrefabData
 {
     public int prefabId;

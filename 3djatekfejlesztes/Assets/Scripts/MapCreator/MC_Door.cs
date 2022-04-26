@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class MC_Door : MC_Prefab
 {
-    private int doorId;
+    private int attachedInteractableId;
+    
 
-    public void SetDoorId(int _id)
+    public void SetAttachedInteractableId(int _id)
     {
-        doorId = _id;
+        attachedInteractableId = _id;
     }
 
-    public int GetDoorId()
+    public int GetAttachedInteractableId()
     {
-        return doorId;
+        return attachedInteractableId;
     }
 }

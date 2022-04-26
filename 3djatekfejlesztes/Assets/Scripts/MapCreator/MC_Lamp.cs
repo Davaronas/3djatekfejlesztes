@@ -16,6 +16,10 @@ public class MC_Lamp : MC_Prefab
         {
             Destroy(GetComponent<Collider>());
         }
+        else
+        {
+            GetComponentInChildren<Light>().enabled = true;
+        }
 
 
         base.Awake();

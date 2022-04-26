@@ -12,7 +12,8 @@ public class Interactable : MonoBehaviour
     public bool isOneWayActivation = false;
     public bool isInteractable = true;
 
-    
+    public int interactableId = 0;
+
     public void Interacted()
     {
         if(isOneWayActivation)

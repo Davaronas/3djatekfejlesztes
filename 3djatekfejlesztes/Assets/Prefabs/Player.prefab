@@ -514,6 +514,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78fa813eeb8f906419b0a9622237f572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId: -200
+  destroyColliderIfNotMapCreator: 0
+  destroyRigidbodyIfMapCreator: 0
 --- !u!1 &1967625316286391092
 GameObject:
   m_ObjectHideFlags: 0

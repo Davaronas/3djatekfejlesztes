@@ -16,7 +16,13 @@ A gombokon kívül a többi UI elemet én készítettem.
 A zenék és egyéb hangok a freesound.org-ról vannak.
 
 
-Három pályát készítettem.
+Három pályát készítettem, nehézségben növekednek.
+
+Készítettem a játékhoz egy map editort is, kicsit bugos, meg nem túl kényelmes használni.
+
+
+
+Körülbelül 3-4 hét volt elkészíteni ezt a projektet.
 
 
 
@@ -30,7 +36,7 @@ A játék billentyûzettel vagy egérrel interaktívan játszható
 		.
 
 Szerepel valamilyen ellenfél (akár az idõ is lehet) a játékban
-		A játékos saját maga ? Idõt számolja a játék és mindig ki van irva hogy eddig mi volt a legjobb idõnk.
+		A játékos saját maga ? Idõt számolja a játék és mindig ki van irva hogy eddig mennyi volt a legjobb idõnk.
 
 A játék rendelkezik felhasználói felülettel (UI), ami tájékoztatja a usert az elért eredményeirõl
 		Elért eredményekrõl nem tájékoztat, de a játékos számára lehetséges cselekvéseket jelzi, és az eddig eltelt idõt jelzi.
@@ -62,8 +68,8 @@ Hatékony implementáció, szkriptek egymás közti kommunikációja megoldott
 
 Ismert hibák:---
 
-Amikor elindul újra az idõ megállítás után valamiért a CharacterController.isGrounded hamisra vált, hiába vagyunk a földön,
-ez azt eredményezi hogy leérkezés hangot hallhatunk ilyenkor, és a dupla ugrás ikon megjelenik egy framere.
+Amikor elindul újra az idõ megállítás után valamiért a CharacterController.isGrounded hamisra vált egy framere, hiába vagyunk a földön,
+ez azt eredményezi hogy leérkezés hangot hallhatunk ilyenkor, és a dupla ugrás ikon is megjelenik arra a framere.
 
 LevitatorRingek néha nem mozognak egyenletesen, néha nagyobb távolság keletkezik a gyûrûk között mint az eredeti.
 ----------------

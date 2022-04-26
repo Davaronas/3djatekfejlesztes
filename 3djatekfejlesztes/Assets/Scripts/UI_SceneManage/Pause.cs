@@ -56,6 +56,12 @@ public class Pause : MonoBehaviour
 
     }
 
+    public void LoadMapCreator()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
+    }
+
     public void Restart()
     {
         Time.timeScale = 1;

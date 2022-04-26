@@ -11,6 +11,11 @@ public class LightControl : MonoBehaviour
 
     private const int playerLayer = 6;
 
+    public int lightControlId;
+
+    // ezt azért csináltam mert ha a lights-ot átirom List-re akkor az összes eddigi referenciát amit az eddig elkészített pályákon
+    // csináltam újra be kéne húzni editorból és nincs kedvem hozzá
+    private List<Light> lightListTemp = new List<Light>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -51,6 +56,18 @@ public class LightControl : MonoBehaviour
                 _newMats[1] = turnedOffMat;
                 _l.transform.parent.Find("LampHead").GetComponent<Renderer>().materials = _newMats;
             }
+    }
+
+  
+
+    public void AddLight(Light _l)
+    {
+        lightListTemp.Add(_l);
+    }
+
+    public void FinalizeLights()
+    {
+        lights = lightListTemp.ToArray();
     }
 
 }

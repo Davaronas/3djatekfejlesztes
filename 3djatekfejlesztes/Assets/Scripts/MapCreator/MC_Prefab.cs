@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MC_Prefab : MonoBehaviour
 {
@@ -22,10 +23,13 @@ public class MC_Prefab : MonoBehaviour
         if(mc_manager == null)
         {
             Destroy(this);
+
+            /*
             if(destroyColliderIfNotMapCreator)
             {
                 Destroy(col);
             }
+            */
 
             
         }
@@ -69,6 +73,11 @@ public class MC_Prefab : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return;
+        }
+
         MC_Manager.OnObjectSelected?.Invoke(transform);
 
         if (mc_manager.selectedTool == MC_Manager.MC_Tools.Select)

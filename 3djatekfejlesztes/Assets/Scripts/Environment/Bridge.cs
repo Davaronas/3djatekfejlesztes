@@ -60,6 +60,10 @@ public class Bridge : MonoBehaviour
         lastCoroutine = StartCoroutine(LerpBetweenScales(baseScale));
     }
 
+    public void SetScaleTo(Vector3 _scale)
+    {
+        scaleTo = _scale;
+    }
 
     IEnumerator LerpBetweenScales(Vector3 _endScale)
     {
@@ -73,5 +77,10 @@ public class Bridge : MonoBehaviour
         }
     }
 
-   
+    public void SetInteractable(Interactable _i)
+    {
+        interactable = _i;
+    }
+
+
 }
